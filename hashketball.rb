@@ -1,3 +1,5 @@
+require 'pry'
+
 # Write your code below game_hash
 def game_hash
   {
@@ -126,4 +128,79 @@ def game_hash
   }
 end
 
-# Write code here
+def get_team_data team_name, data
+  game_hash.each do | team, team_data |
+    if team_data[:team_name] == team_name
+      return team_data[data]
+    end
+  end
+end
+
+def find_player_data player
+  game_hash.each do | team, team_data |
+    team_data[:players].each do | player_data |
+      if player_data[:player_name] == player
+        return player_data
+      end
+    end
+  end
+end
+
+def find_max_stat stat
+  maxnum = nil
+  maxname = nil
+  game_hash.each do | team, team_data |
+    team_data[:players].each do | player_data |
+      if maxnum == nil 
+        maxnum = player_data[stat]
+      end
+      
+      if player_data[stat] > maxnum
+        maxnum = player_data[stat]
+        maxname = player_data[:player_name]
+      end
+    end
+  end
+  
+  maxname
+end
+
+def num_points_scored player
+  find_player_data(player)[:points]
+end
+
+def shoe_size player
+  find_player_data(player)[:shoe]
+end
+
+def team_colors team
+  get_team_data team, :colors
+end
+
+def team_names
+  result = []
+  
+  game_hash.each do | team, team_data |
+    result << team_data[:team_name]
+  end
+  
+  result
+end
+
+def player_numbers team_name
+  result = []
+  
+  get_team_data(team_name, :players).each do | pyr |
+    result << pyr[:number]
+  end
+  
+  result
+end
+
+def player_stats player
+  find_player_data player
+end
+
+def big_shoe_rebounds
+  find_player_data(find_max_stat(:shoe))[:rebounds]
+end
