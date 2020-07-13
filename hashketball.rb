@@ -128,7 +128,33 @@ def game_hash
 end
 
 # Build a method, num_points_scored that takes in an argument of a player's name
-# and returns the number of points scored for that player.
+# and returns the numb(er of points scored for that player.
+def all_players 
+  game_hash.values.collect do |team|team[:players]
+  end.flatten
+end 
+
+def get_player player_name
+  game_hash.values.each do |team|
+  team[:players].each do |player|
+    return player if player[:player_name] == player_name
+  end
+end
+
+def get_player player_name
+  all_players.find { |player|  player_name == player[:player_name]}
+  end 
+end 
+
+def players_array (player)
+  game_hash.each do |location, team|
+    team.each[:players].collect do |player|
+      return team[:player]
+    end 
+  end
+end 
+
+
 def num_points_scored(player_search)
   game_hash.each do |team, team_info|
     team_info[:players].each do |player|
@@ -149,23 +175,6 @@ def shoe_size(name)
   end
 end
 
-# def game_hash
-#   {
-#     home: {
-#       team_name: "Brooklyn Nets",
-#       colors: ["Black", "White"],
-#       players: [
-#         {
-#           player_name: "Alan Anderson",
-#           number: 0,
-#           shoe: 16,
-#           points: 22,
-#           rebounds: 12,
-#           assists: 12,
-#           steals: 3,
-#           blocks: 1,
-#           slam_dunks: 1
-          
 def team_colors(team_name)
   game_hash.each do |team, team_info|
     # binding.pry
@@ -222,4 +231,3 @@ def big_shoe_rebounds
 
   num_rebounds
 end
-  
