@@ -134,16 +134,9 @@ def all_players
   end.flatten
 end 
 
-def get_player player_name
-  game_hash.values.each do |team|
-  team[:players].each do |player|
-    return player if player[:player_name] == player_name
-  end
-end
 
 def get_player player_name
-  all_players.find { |player|  player_name == player[:player_name]}
-  end 
+  all_players.find { |player|  player_name == player[:player_name]} 
 end 
 
 def players_array (player)
@@ -155,21 +148,18 @@ def players_array (player)
 end 
 
 
-def num_points_scored(player_search)
+def num_points_scored(player_name)
   game_hash.each do |team, team_info|
     team_info[:players].each do |player|
-      if player[:player_name] == player_search
-        return player[:points]
-      end
+      return player[:points] if player[:player_name] == player_name
     end
   end
 end
 
 def shoe_size(name)
-    game_hash.each do |team, team_info|
+  game_hash.each do |team, team_info|
     team_info[:players].each do |player|
       return player[:shoe] if player[:player_name] == name
-      
     end
   end
 end
