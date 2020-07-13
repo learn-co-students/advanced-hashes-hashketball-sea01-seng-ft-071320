@@ -129,15 +129,15 @@ def game_hash
 end
 
 def get_team_data team_name, data
-  game_hash.each do | team, team_data |
+  game_hash.each do | _, team_data |
     if team_data[:team_name] == team_name
       return team_data[data]
     end
   end
 end
 
-def find_player_data player
-  game_hash.each do | team, team_data |
+def get_player_data player
+  game_hash.each do | _, team_data |
     team_data[:players].each do | player_data |
       if player_data[:player_name] == player
         return player_data
@@ -149,10 +149,11 @@ end
 def find_max_stat stat
   maxnum = nil
   maxname = nil
-  game_hash.each do | team, team_data |
+  game_hash.each do | _, team_data |
     team_data[:players].each do | player_data |
       if maxnum == nil 
         maxnum = player_data[stat]
+        maxname = player_data[:player_name]
       end
       
       if player_data[stat] > maxnum
@@ -166,21 +167,21 @@ def find_max_stat stat
 end
 
 def num_points_scored player
-  find_player_data(player)[:points]
+  get_player_data(player)[:points]
 end
 
 def shoe_size player
-  find_player_data(player)[:shoe]
+  get_player_data(player)[:shoe]
 end
 
 def team_colors team
-  get_team_data team, :colors
+  get_team_data(team, :colors)
 end
 
 def team_names
   result = []
   
-  game_hash.each do | team, team_data |
+  game_hash.each do | _, team_data |
     result << team_data[:team_name]
   end
   
@@ -198,9 +199,9 @@ def player_numbers team_name
 end
 
 def player_stats player
-  find_player_data player
+  get_player_data(player)
 end
 
 def big_shoe_rebounds
-  find_player_data(find_max_stat(:shoe))[:rebounds]
+  get_player_data(find_max_stat(:shoe))[:rebounds]
 end
