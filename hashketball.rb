@@ -144,6 +144,14 @@ def get_max stat
   get_players.max_by { |player| player[stat] }
 end
 
+def team_points location
+  points = 0
+
+  game_hash[location][:players].each { |player| points += player[:points] }
+
+  points
+end
+
 def num_points_scored player_name
   get_player(player_name)[:points]
 end
@@ -177,16 +185,7 @@ def most_points_scored
 end
 
 def winning_team
-  points = {
-    home: 0,
-    away: 0
-  }
-
-  game_hash.each do |location, team|
-    team[:players].each do |player|
-      points[location] += player[:points]
-    end
-  end
+  points = { home: team_points(:home), away: team_points(:away) }
 
   winner = points.max_by { |team, points| points }[0]
 
