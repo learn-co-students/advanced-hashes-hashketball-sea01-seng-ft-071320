@@ -128,80 +128,75 @@ def game_hash
   }
 end
 
-def get_team_data team_name, data
-  game_hash.each do | _, team_data |
-    if team_data[:team_name] == team_name
-      return team_data[data]
-    end
-  end
+def get_team team_name
+  game_hash.values.find { |team| team[:team_name] == team_name }
 end
 
-def get_player_data player
-  game_hash.each do | _, team_data |
-    team_data[:players].each do | player_data |
-      if player_data[:player_name] == player
-        return player_data
-      end
-    end
-  end
+def get_players
+  game_hash.values.map { |team| team[:players] }.flatten
 end
 
-def find_max_stat stat
-  maxnum = nil
-  maxname = nil
-  game_hash.each do | _, team_data |
-    team_data[:players].each do | player_data |
-      if maxnum == nil 
-        maxnum = player_data[stat]
-        maxname = player_data[:player_name]
-      end
-      
-      if player_data[stat] > maxnum
-        maxnum = player_data[stat]
-        maxname = player_data[:player_name]
-      end
-    end
-  end
-  
-  maxname
+def get_player player_name
+  get_players.find { |player| player[:player_name] == player_name }
 end
 
-def num_points_scored player
-  get_player_data(player)[:points]
+def get_max stat
+  get_players.max_by { |player| player[stat] }
 end
 
-def shoe_size player
-  get_player_data(player)[:shoe]
+def num_points_scored player_name
+  get_player(player_name)[:points]
 end
 
-def team_colors team
-  get_team_data(team, :colors)
+def shoe_size player_name
+  get_player(player_name)[:shoe]
+end
+
+def team_colors team_name
+  get_team(team_name)[:colors]
 end
 
 def team_names
-  result = []
-  
-  game_hash.each do | _, team_data |
-    result << team_data[:team_name]
-  end
-  
-  result
+  game_hash.values.map { |team| team[:team_name] }
 end
 
 def player_numbers team_name
-  result = []
-  
-  get_team_data(team_name, :players).each do | pyr |
-    result << pyr[:number]
-  end
-  
-  result
+  get_team(team_name)[:players].collect { | player | player[:number] }
 end
 
-def player_stats player
-  get_player_data(player)
+def player_stats player_name
+  get_player(player_name)
 end
 
 def big_shoe_rebounds
-  get_player_data(find_max_stat(:shoe))[:rebounds]
+  get_max(:shoe)[:rebounds]
+end
+
+def most_points_scored
+  get_max(:points)[:player_name]
+end
+
+def winning_team
+  points = {
+    home: 0,
+    away: 0
+  }
+
+  game_hash.each do |location, team|
+    team[:players].each do |player|
+      points[location] += player[:points]
+    end
+  end
+
+  winner = points.max_by { |team, points| points }[0]
+
+  game_hash[winner][:team_name]
+end
+
+def player_with_longest_name
+  get_players.max_by { |player| player[:player_name].length }[:player_name]
+end
+
+def long_name_steals_a_ton?
+  player_with_longest_name == get_max(:steals)[:player_name]
 end
