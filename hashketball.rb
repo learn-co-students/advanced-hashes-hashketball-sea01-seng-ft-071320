@@ -145,11 +145,7 @@ def get_max stat
 end
 
 def team_points location
-  points = 0
-
-  game_hash[location][:players].each { |player| points += player[:points] }
-
-  points
+  game_hash[location][:players].reduce(0) { |points, player| points + player[:points] }
 end
 
 def num_points_scored player_name
@@ -185,11 +181,7 @@ def most_points_scored
 end
 
 def winning_team
-  points = { home: team_points(:home), away: team_points(:away) }
-
-  winner = points.max_by { |team, points| points }[0]
-
-  game_hash[winner][:team_name]
+  game_hash[[ :home, :away ].max_by { |team| team_points(team) }][:team_name]
 end
 
 def player_with_longest_name
