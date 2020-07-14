@@ -136,8 +136,8 @@ end
 
 
 def get_player player_name
-  all_players.find { |player|  player_name == player[:player_name]} 
-end 
+  all_players.find { |player| player_name == player[:player_name] }
+end
 
 def players_array (player)
   game_hash.each do |location, team|
@@ -156,12 +156,12 @@ def num_points_scored(player_name)
   end
 end
 
-def shoe_size(name)
-  game_hash.each do |team, team_info|
-    team_info[:players].each do |player|
-      return player[:shoe] if player[:player_name] == name
-    end
-  end
+def num_points_scored(player_name)
+  get_player(player_name)[:points]
+end
+
+def shoe_size(player_name)
+get_player(player_name)[:shoe]
 end
 
 def team_colors(team_name)
@@ -176,6 +176,7 @@ end
 
 def team_names
   game_hash.collect do |place, team|
+    # binding.pry
     team[:team_name]
   end
 end 
@@ -193,9 +194,9 @@ def player_numbers(team_name)
 
 def player_stats(player_name)
 	game_hash.each do |place, team_data|
-		team_data[:players].each do |a| 
-			if a[:player_name] == player_name
-				my_hash = a
+		team_data[:players].each do |player| 
+			if player[:player_name] == player_name
+				my_hash = player
 				return my_hash
 			end
 		end
